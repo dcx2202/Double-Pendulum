@@ -23,6 +23,8 @@ let a1_acc = 0;
 let a2_acc = 0;
 const g = 1;
 
+let showLabel = true;
+
 var points;
 
 function preload()
@@ -36,6 +38,9 @@ function setup()
     width = window.innerWidth - 20;
     height = window.innerHeight - 20;
     canvas = createCanvas(width, height);
+
+    textAlign(CENTER);
+    textSize(20);
 
     pivot = createVector(width / 2, height / 2);
 
@@ -62,6 +67,12 @@ function setup()
     points = [];
 
     song.play();
+}
+
+function mousePressed()
+{
+    getAudioContext().resume();
+    showLabel = false;
 }
 
 function updateAccelerations()
@@ -101,6 +112,13 @@ function updateVelocitiesAndAngle()
 function draw()
 {
     background(0);
+
+    if(showLabel)
+    {
+        stroke(255);
+        strokeWeight(1);
+        text("click to start playing music", width / 2, height - 20);
+    }
 
     // Update components
     updateAccelerations();
