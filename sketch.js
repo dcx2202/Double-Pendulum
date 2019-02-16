@@ -115,8 +115,7 @@ function draw()
 
     if(showLabel)
     {
-        stroke(255);
-        strokeWeight(1);
+        fill(255);
         text("click to start playing music", width / 2, height - 20);
     }
 
