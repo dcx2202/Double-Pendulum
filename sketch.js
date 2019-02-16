@@ -116,7 +116,7 @@ function draw()
     if(showLabel)
     {
         fill(255);
-        text("click to start playing music", width / 2, height - 20);
+        text("if on chrome, click to start playing music", width / 2, height - 20);
     }
 
     // Update components
