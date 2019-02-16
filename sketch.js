@@ -24,8 +24,10 @@ let a2_acc = 0;
 const g = 1;
 
 let showLabel = true;
+let showWeight1Trace = false;
 
-var points;
+var points1;
+var points2;
 
 function preload()
 {
@@ -40,12 +42,12 @@ function setup()
     canvas = createCanvas(width, height);
 
     textAlign(CENTER);
-    textSize(20);
+    textSize(16);
 
     pivot = createVector(width / 2, height / 2);
 
-    angle1 = PI / 2;
-    angle2 = PI / 2;
+    angle1 = random(0, 2 * PI);
+    angle2 = random(0, 2 * PI);
 
     if(!customArmLengths)
     {
@@ -64,13 +66,16 @@ function setup()
     weight1 = new Weight(0, 0, radius1, arm1_length, mass1, angle1, a1_v, a1_acc);
     weight2 = new Weight(0, 0, radius2, arm2_length, mass2, angle2, a2_v, a2_acc);
 
-    points = [];
+    points1 = [];
+    points2 = [];
 
     song.play();
 }
 
 function mousePressed()
 {
+    showWeight1Trace = !showWeight1Trace;
+
     getAudioContext().resume();
     showLabel = false;
 }
@@ -113,11 +118,11 @@ function draw()
 {
     background(0);
 
+    fill(255);
+    text("click to toggle weight 1 trace", width / 2, height - 50);
+
     if(showLabel)
-    {
-        fill(255);
         text("if on chrome, click to start playing music", width / 2, height - 20);
-    }
 
     // Update components
     updateAccelerations();
@@ -138,14 +143,28 @@ function draw()
     ellipse(weight2.position.x, weight2.position.y, weight2.radius, weight2.radius);
 
     // Add second weight position
-    points.push(new Point(weight2.position.x, weight2.position.y));
+    points1.push(new Point(weight1.position.x, weight1.position.y));
+
+    // Add second weight position
+    points2.push(new Point(weight2.position.x, weight2.position.y));
+
+    // Draw the first weight's previous positions
+    if(showWeight1Trace)
+    {
+        for(var i = 0; i < points2.length - 1; i++)
+        {
+            colorMode(HSB);
+            stroke(map(i, 0, points1.length, 200, 250), 255, map(i, 0, points1.length, 0, 255));
+            line(points1[i].position.x, points1[i].position.y, points1[i + 1].position.x, points1[i + 1].position.y);
+        }
+    }
 
     // Draw the second weight's previous positions
-    for(var i = 0; i < points.length; i++)
+    for(var i = 0; i < points2.length - 1; i++)
     {
         colorMode(HSB);
-        stroke(map(i, 0, points.length, 100, 150), 255, map(i, 0, points.length, 0, 255));
-        ellipse(points[i].position.x, points[i].position.y, 1);
+        stroke(map(i, 0, points2.length, 100, 150), 255, map(i, 0, points2.length, 0, 255));
+        line(points2[i].position.x, points2[i].position.y, points2[i + 1].position.x, points2[i + 1].position.y);
     }
 
     // Draw outside circle
@@ -155,6 +174,9 @@ function draw()
     ellipse(0, 0, 2 * (weight1.arm_length + weight2.arm_length + 5));
 
     // Only store at most 500 points
-    if(points.length > 500)
-        points.splice(0, 1);
+    if(points1.length > 500)
+        points1.splice(0, 1);
+
+    if(points2.length > 500)
+        points2.splice(0, 1);
 }

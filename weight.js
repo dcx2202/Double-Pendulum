@@ -16,10 +16,4 @@ class Weight
         fill(150);
         ellipse(this.position.x, this.position.y, this.radius * 2);
     }
-
-    updatePosition(x, y)
-    {
-        this.position.x = x;
-        this.position.y = y;
-    }
 }
